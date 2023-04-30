@@ -34,7 +34,7 @@ $(LIB_PATH): $(LIB_OBJECTS)
 	ar rcs $@ $^
 
 $(OBJ_DIR)/%.o: %.cpp
-	$(CXX) -cpp $(CFLAGS) $(CPPFLAGS) $< -o $@
+	$(CXX) -c $(CFLAGS) $(CPPFLAGS) $< -o $@
 
 .PHONY: clean
 clean:
