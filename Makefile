@@ -11,7 +11,7 @@ SRC_DIR = src
 APP_PATH = $(BIN_DIR)/$(APP_NAME)
 LIB_PATH = $(OBJ_DIR)/$(SRC_DIR)/$(LIB_NAME)/$(LIB_NAME).a
 
-SRC_EXT = c
+SRC_EXT = cpp
 APP_RUN = $(BIN_DIR)/./$(APP_NAME)
 
 APP_SOURCES = $(shell find $(SRC_DIR)/$(APP_NAME) -name '*.$(SRC_EXT)')
