@@ -1,9 +1,7 @@
 #include <ctime>
 #include <iostream>
 
-
 using namespace std;
-
 
 #include <libapp/pwgen.h>
 
@@ -12,7 +10,7 @@ using namespace std;
 int main()
 {
     srand(time(NULL));
-    gen_sym();
-    help_message();
+    genSym();
+    helpMessage();
     return 0;
 }

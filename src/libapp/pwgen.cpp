@@ -5,12 +5,12 @@
 
 using namespace std;
 
-char getRandchar(char start, char end)
+char getRandChar(char start, char end)
 {
     return (char)(start + rand() % (end - start + 1));
 }
 
-void help_message(void)
+void helpMessage(void)
 {
     setlocale(LC_ALL, "Russian");
     cout << "Запуск: ./pwgen [OPTION] [pw_length] [number_of_pw], где:\
@@ -28,7 +28,7 @@ void help_message(void)
 " << endl;
 }
 
-char gen_sym()
+char genSym()
 {
     char* symbols = new char[28];
     int k = 0;
