@@ -1,4 +1,5 @@
 #include <ctest.h>
+#include <cstdlib>
 
 #include "libapp/pwgen.h"
 
@@ -33,5 +34,6 @@ CTEST(symbol, check_ok) {
         }
     }
     const int expected = 1;
+    delete[] string;
     ASSERT_EQUAL(expected, real);
 }
