@@ -10,7 +10,7 @@ using namespace std;
 int main()
 {
     srand(time(NULL));
-    gen_sym();
-    
+    genSym();
+    helpMessage();
     return 0;
 }

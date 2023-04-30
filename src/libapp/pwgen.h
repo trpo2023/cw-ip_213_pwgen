@@ -1,5 +1,5 @@
 #pragma once
 
-char getRandchar(char, char);
-void help_message(void);
-char gen_sym();
+char getRandChar(char, char);
+void helpMessage(void);
+char genSym();
