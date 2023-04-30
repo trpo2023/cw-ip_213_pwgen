@@ -62,8 +62,13 @@ clean:
 	
 .PHONY: run
 run: $(APP_RUN)
-	$(APP_RUN)
-	
+	$(APP_RUN) $(ARGS)
+
 .PHONY: rtest
 rtest: $(TEST_CHECK)
-	$(TEST_CHECK)
+	$(TEST_CHECK) 
+
+$(eval ARGS := $(filter-out $@,$(MAKECMDGOALS)))
+
+%:
+    @:
