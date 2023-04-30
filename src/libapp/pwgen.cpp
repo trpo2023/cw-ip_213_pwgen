@@ -45,3 +45,18 @@ char genSym()
     delete[] symbols;
     return sym;
 }
+
+char genAa()
+{
+    char* symbols = new char[52];
+    int k = 0;
+    for (char j = 'A'; j <= 'Z'; j++) {
+        symbols[k++] = j;
+    }
+    for (char j = 'a'; j <= 'z'; j++) {
+        symbols[k++] = j;
+    }
+    char sym = symbols[rand() % 52];
+    delete[] symbols;
+    return sym;
+}
