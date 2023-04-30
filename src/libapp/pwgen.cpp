@@ -1,8 +1,9 @@
-#include <iostream>
+#include <cstdlib>
+#include <ctime>
 
 using namespace std;
 
-void hello(void) {
-
-    cout<<"Hello"<<endl;
+char getRandchar(char start, char end)
+{
+    return (char)(start + rand() % (end - start + 1));
 }
