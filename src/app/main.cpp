@@ -6,6 +6,6 @@ using namespace std;
 
 int main () {
     
-    hello();
+    help_message();
     return 0;
 }
