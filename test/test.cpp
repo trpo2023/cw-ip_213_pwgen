@@ -11,9 +11,10 @@ CTEST (check_generation, check_numbers)
     int left = (int) '0';
     int right = (int) '9';
     ASSERT_INTERVAL(left, right, real);
+}
 
 
-CTEST(symbol, check_ok) {
+CTEST(check_generation, check_symbol) {
     char* string = new char[N];
     int k = 0;
     for (char j = '!'; j <= '/'; j++) {
