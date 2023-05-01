@@ -60,3 +60,43 @@ char genAa()
     delete[] symbols;
     return sym;
 }
+
+char* generateOneParam(char** argv)
+{
+    bool numbersOnly = false, lowRegistrOnly = false, upRegistrOnly = false, upLowRegistr = false, symbols = false;
+    int passwordLength = 0;
+    passwordLength = atoi(argv[1]);
+    char *password = (char*)malloc(passwordLength*sizeof(char));
+    if (string(argv[2]) == "-0")
+        numbersOnly = true;
+    if (string(argv[2]) == "-A")
+        upRegistrOnly = true;
+    if (string(argv[2]) == "-a")
+        lowRegistrOnly = true;
+    if (string(argv[2]) == "-Aa")
+        upLowRegistr = true;
+    if (string(argv[2]) == "-symbols")
+        symbols = true;
+    int p = 0;
+    if (numbersOnly) {
+        for (int i = 0; i < passwordLength; i++)
+            password[p++] = getRandChar('0', '9');
+    }
+    else if (upRegistrOnly) {
+        for (int i = 0; i < passwordLength; i++)
+            password[p++] = getRandChar('A', 'Z');
+    }
+    else if (lowRegistrOnly) {
+        for (int i = 0; i < passwordLength; i++)
+            password[p++] = getRandChar('a', 'z');
+    }
+    else if (upLowRegistr) {
+        for (int i = 0; i < passwordLength; i++)
+            password[p++] = genAa();
+    }
+    else if (symbols) {
+        for (int i = 0; i < passwordLength; i++)
+            password[p++] = genSym();
+    }
+    return password;
+}
