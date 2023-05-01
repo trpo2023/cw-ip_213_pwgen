@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
+#include <string.h>
 
 #include "macr.h"
 
@@ -67,8 +68,7 @@ char* generateOneParam(char** argv)
 {
     bool numbersOnly = false, lowRegistrOnly = false, upRegistrOnly = false,
          upLowRegistr = false, symbols = false;
-    int passwordLength = 0;
-    passwordLength = atoi(argv[1]);
+    int passwordLength = atoi(argv[1]);
     char* password = (char*)malloc(passwordLength * sizeof(char));
     if (string(argv[2]) == "-0")
         numbersOnly = true;
@@ -112,4 +112,43 @@ char** generateDefault()
         }
     }
     return passwords;
+}
+
+char* generateSeveralParam(int count, char** values)
+{
+    int passwordLength = atoi(values[1]);
+    char* password = (char*)malloc(passwordLength * sizeof(char));
+    char** args = (char**)malloc((count - 2) * sizeof(char*));
+    for (int i = 0; i < count - 2; i++) {
+        args[i] = (char*)malloc(strlen(values[i + 2]) * sizeof(char));
+        strcpy(args[i], values[i + 2]);
+    }
+    int p = 0;
+    for (int i = 0; i < count - 2; i++) {
+        if (string(args[i]) == "-0")
+            password[p++] = getRandChar('0', '9');
+        else if (string(args[i]) == "-A")
+            password[p++] = getRandChar('A', 'Z');
+        else if (string(args[i]) == "-a")
+            password[p++] = getRandChar('a', 'z');
+        else if (string(args[i]) == "-Aa")
+            password[p++] = genAa();
+        else if (string(args[i]) == "-symbols")
+            password[p++] = genSym();
+    }
+
+    for (int i = count - 2; i < passwordLength; i++) {
+        int k = rand() % (count - 2);
+        if (string(args[k]) == "-0")
+            password[p++] = getRandChar('0', '9');
+        else if (string(args[k]) == "-A")
+            password[p++] = getRandChar('A', 'Z');
+        else if (string(args[k]) == "-a")
+            password[p++] = getRandChar('a', 'z');
+        else if (string(args[k]) == "-Aa")
+            password[p++] = genAa();
+        else if (string(args[k]) == "-symbols")
+            password[p++] = genSym();
+    }
+    return password;
 }
