@@ -3,6 +3,8 @@
 #include <ctime>
 #include <iostream>
 
+#include "macr.h"
+
 using namespace std;
 
 char getRandChar(char start, char end)
@@ -30,7 +32,7 @@ void helpMessage(void)
 
 char genSym()
 {
-    char* symbols = new char[28];
+    char* symbols = new char[SYM];
     int k = 0;
     for (char j = '!'; j <= '/'; j++) {
         symbols[k++] = j;
@@ -41,14 +43,14 @@ char genSym()
     for (char j = '['; j <= '`'; j++) {
         symbols[k++] = j;
     }
-    char sym = symbols[rand() % 28];
+    char sym = symbols[rand() % SYM];
     delete[] symbols;
     return sym;
 }
 
 char genAa()
 {
-    char* symbols = new char[52];
+    char* symbols = new char[LET];
     int k = 0;
     for (char j = 'A'; j <= 'Z'; j++) {
         symbols[k++] = j;
@@ -56,17 +58,18 @@ char genAa()
     for (char j = 'a'; j <= 'z'; j++) {
         symbols[k++] = j;
     }
-    char sym = symbols[rand() % 52];
+    char sym = symbols[rand() % LET];
     delete[] symbols;
     return sym;
 }
 
 char* generateOneParam(char** argv)
 {
-    bool numbersOnly = false, lowRegistrOnly = false, upRegistrOnly = false, upLowRegistr = false, symbols = false;
+    bool numbersOnly = false, lowRegistrOnly = false, upRegistrOnly = false,
+         upLowRegistr = false, symbols = false;
     int passwordLength = 0;
     passwordLength = atoi(argv[1]);
-    char *password = (char*)malloc(passwordLength*sizeof(char));
+    char* password = (char*)malloc(passwordLength * sizeof(char));
     if (string(argv[2]) == "-0")
         numbersOnly = true;
     if (string(argv[2]) == "-A")
@@ -81,22 +84,32 @@ char* generateOneParam(char** argv)
     if (numbersOnly) {
         for (int i = 0; i < passwordLength; i++)
             password[p++] = getRandChar('0', '9');
-    }
-    else if (upRegistrOnly) {
+    } else if (upRegistrOnly) {
         for (int i = 0; i < passwordLength; i++)
             password[p++] = getRandChar('A', 'Z');
-    }
-    else if (lowRegistrOnly) {
+    } else if (lowRegistrOnly) {
         for (int i = 0; i < passwordLength; i++)
             password[p++] = getRandChar('a', 'z');
-    }
-    else if (upLowRegistr) {
+    } else if (upLowRegistr) {
         for (int i = 0; i < passwordLength; i++)
             password[p++] = genAa();
-    }
-    else if (symbols) {
+    } else if (symbols) {
         for (int i = 0; i < passwordLength; i++)
             password[p++] = genSym();
     }
     return password;
+}
+
+char** generateDefault()
+{
+    char** passwords = new char*[ROW];
+    for (int i = 0; i < ROW; i++) {
+        passwords[i] = new char[COL];
+    }
+    for (int i = 0; i < ROW; i++) {
+        for (int j = 0; j < COL; j++) {
+            passwords[i][j] = getRandChar('!', 'z');
+        }
+    }
+    return passwords;
 }
