@@ -66,7 +66,7 @@ CTEST(check_generation, check_up_and_low)
         string[k++] = j;
     }
     int real = 0;
-    int x = genAa();
+    int x = genUpLow();
     for (int i = 0; i < N; i++) {
         if (x == string[i]) {
             real = 1;

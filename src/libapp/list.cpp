@@ -20,5 +20,4 @@ void listPassword(char** passwords, int row) {
     for(int i = 0; i < row; i++) {
         printf("%s\n", passwords[i]);
     }
-    
 }
