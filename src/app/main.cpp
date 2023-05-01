@@ -20,10 +20,13 @@ int main(int argc, char* argv[])
             helpMessage();
         } else if (string(argv[1]) == "-word") {
             cout << generateRandomWord();
+        } else {
+            cout << "Error: few arguments\n";
+            return 2;
         }
     } else if (argc == 3) {
-        cout << "Error: few arguments" << endl;
-        return ERR;
+        cout << "Error: few arguments\n";
+        return 2;
     } else if (argc >= 4) {
         listPassword(generateSeveralParam(argc, argv), atoi(argv[2]));
     }
