@@ -20,7 +20,6 @@ char* generateRandomWord(void)
     int size = 1;
     char* buffer = (char*)malloc(SIZE * sizeof(char));
     char** words = (char**)malloc(sizeof(char*));
-    ;
     while (fgets(buffer, SIZE, file)) {
         words = (char**)realloc(words, (size) * sizeof(char*));
         words[size - 1] = (char*)malloc((strlen(buffer)) * sizeof(char));
@@ -29,7 +28,11 @@ char* generateRandomWord(void)
     }
     fclose(file);
     free(buffer);
-    return words[rand() % (size - 1)];
+    char* word = words[rand() % (size - 1)];
+    for (int i = 0; i < (size - 1); i++)
+        free(words[i]);
+    free(words);
+    return word;
 }
 
 void helpMessage(void)
@@ -144,5 +147,9 @@ char** generateSeveralParam(int count, char** values)
                 passwords[g][p++] = genSym();
         }
     }
+
+    for (int i = 0; i < count - 3; i++)
+        free(args[i]);
+    free(args);
     return passwords;
 }
