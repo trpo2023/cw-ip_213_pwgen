@@ -15,12 +15,19 @@ int main(int argc, char* argv[])
         char** passwords = generateDefault();
         listDefPassword(passwords);
     } else if (argc == 2) {
-        cout << "Error: few arguments" << endl;
-        return 1;
+        if(string(argv[1]) == "-help") {
+            helpMessage();
+        }
+        else {
+            cout << "Error: few arguments" << endl;
+            return 1;
+        }
     } else if (argc == 3) {
         char* k = generateOneParam(argv);
         cout << k << endl;
     }
-    else
+    else if (argc > 3) {
+
+    }
     return 0;
 }
