@@ -17,7 +17,13 @@ int main(int argc, char* argv[])
     } else if (argc == 2) {
         if (string(argv[1]) == "-help") {
             helpMessage();
-        } else {
+        }
+        
+        else if (string(argv[1]) == "-word") { 
+            cout << generateRandomWord();
+        } 
+        
+        else {
             cout << "Error: few arguments" << endl;
             return 1;
         }

@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
+#include <fstream>
 #include <string.h>
 
 #include "macr.h"
@@ -13,10 +14,27 @@ char getRandChar(char start, char end)
     return (char)(start + rand() % (end - start + 1));
 }
 
+char* generateRandomWord(void)
+{
+    FILE *file = fopen("words.txt", "r");
+    int size = 1;
+    char *buffer = (char*) malloc(SIZE * sizeof(char));
+    char **words = (char**)malloc(sizeof(char*));;
+    while(fgets(buffer, SIZE, file)) {
+        words = (char**) realloc(words, (size) * sizeof(char*));
+        words[size - 1] = (char*) malloc((strlen(buffer))*sizeof(char));
+        strcpy(words[size - 1], buffer);
+        size++;
+    }
+    fclose(file);
+    free(buffer);
+    return words[rand() % (size-1)];   
+}
+
 void helpMessage(void)
 {
     setlocale(LC_ALL, "Russian");
-    cout << "Запуск: ./pwgen [OPTION] [pw_length] [number_of_pw], где:\
+    cout << "\nЗапуск: make run ARGS=[pw_length] [number_of_pw] [OPTION], где:\
         \n[OPTION] – параметры пароля (аргументы командной строки).\
         \n[pw_length] – длина генерируемого пароля.\
         \n[number_of_pw] – количество генерируемых паролей\
@@ -31,7 +49,7 @@ void helpMessage(void)
 " << endl;
 }
 
-char genSym()
+char genSym(void)
 {
     char* symbols = new char[SYM];
     int k = 0;
@@ -49,7 +67,7 @@ char genSym()
     return sym;
 }
 
-char genAa()
+char genUpLow(void)
 {
     char* symbols = new char[LET];
     int k = 0;
@@ -66,41 +84,37 @@ char genAa()
 
 char* generateOneParam(char** argv)
 {
-    bool numbersOnly = false, lowRegistrOnly = false, upRegistrOnly = false,
-         upLowRegistr = false, symbols = false;
     int passwordLength = atoi(argv[1]);
+    if (passwordLength == 0) {
+        cout << "\nError: wrong password length" << endl;
+        return NULL;
+    }
     char* password = (char*)malloc(passwordLength * sizeof(char));
-    if (string(argv[2]) == "-0")
-        numbersOnly = true;
-    if (string(argv[2]) == "-A")
-        upRegistrOnly = true;
-    if (string(argv[2]) == "-a")
-        lowRegistrOnly = true;
-    if (string(argv[2]) == "-Aa")
-        upLowRegistr = true;
-    if (string(argv[2]) == "-symbols")
-        symbols = true;
-    int p = 0;
-    if (numbersOnly) {
+    int p = 0;  
+    if (string(argv[2]) == "-0") {
         for (int i = 0; i < passwordLength; i++)
             password[p++] = getRandChar('0', '9');
-    } else if (upRegistrOnly) {
+    } 
+    else if (string(argv[2]) == "-A") {
         for (int i = 0; i < passwordLength; i++)
             password[p++] = getRandChar('A', 'Z');
-    } else if (lowRegistrOnly) {
+    }
+    else if (string(argv[2]) == "-a") {
         for (int i = 0; i < passwordLength; i++)
             password[p++] = getRandChar('a', 'z');
-    } else if (upLowRegistr) {
+    }
+    else if (string(argv[2]) == "-Aa") {
         for (int i = 0; i < passwordLength; i++)
-            password[p++] = genAa();
-    } else if (symbols) {
+            password[p++] = genUpLow();
+    }
+    else if (string(argv[2]) == "-symbols") {
         for (int i = 0; i < passwordLength; i++)
             password[p++] = genSym();
     }
     return password;
 }
 
-char** generateDefault()
+char** generateDefault(void)
 {
     char** passwords = new char*[ROW];
     for (int i = 0; i < ROW; i++) {
@@ -117,6 +131,10 @@ char** generateDefault()
 char* generateSeveralParam(int count, char** values)
 {
     int passwordLength = atoi(values[1]);
+    if (passwordLength == 0) {
+        cout << "\nError: wrong password length" << endl;
+        return NULL;
+    }
     char* password = (char*)malloc(passwordLength * sizeof(char));
     char** args = (char**)malloc((count - 2) * sizeof(char*));
     for (int i = 0; i < count - 2; i++) {
@@ -132,7 +150,7 @@ char* generateSeveralParam(int count, char** values)
         else if (string(args[i]) == "-a")
             password[p++] = getRandChar('a', 'z');
         else if (string(args[i]) == "-Aa")
-            password[p++] = genAa();
+            password[p++] = genUpLow();
         else if (string(args[i]) == "-symbols")
             password[p++] = genSym();
     }
@@ -146,9 +164,10 @@ char* generateSeveralParam(int count, char** values)
         else if (string(args[k]) == "-a")
             password[p++] = getRandChar('a', 'z');
         else if (string(args[k]) == "-Aa")
-            password[p++] = genAa();
+            password[p++] = genUpLow();
         else if (string(args[k]) == "-symbols")
             password[p++] = genSym();
     }
     return password;
 }
+
