@@ -10,7 +10,7 @@
 
 Запуск программного продукта происходит через консоль в формате:
 ```
-make run ARGS="[PW_LEN] [NUM_OF_PW] [OPTION]"
+$ make run ARGS="[PW_LEN] [NUM_OF_PW] [OPTION]"
 
 [OPTION]– параметры пароля (аргументы командной строки).
 [PW_LEN] – длина генерируемого пароля.
@@ -42,7 +42,7 @@ make run ARGS="[PW_LEN] [NUM_OF_PW] [OPTION]"
 ## Интерфейс приложения:
 Консольное приложение, которое принимает на вход некоторые параметры (аргументы командной строки) в формате:
 ```
-make run ARGS="[PW_LEN] [NUM_OF_PW] [OPTION]"
+$ make run ARGS="[PW_LEN] [NUM_OF_PW] [OPTION]"
 ```
 ---
 
