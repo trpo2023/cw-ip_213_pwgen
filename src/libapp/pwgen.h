@@ -4,7 +4,6 @@ char getRandChar(char, char);
 void helpMessage(void);
 char genSym(void);
 char genUpLow(void);
-char* generateOneParam(char**);
 char** generateDefault(void);
-char* generateSeveralParam(int, char**);
+char** generateSeveralParam(int, char**);
 char* generateRandomWord(void);

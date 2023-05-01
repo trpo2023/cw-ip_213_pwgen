@@ -1,8 +1,8 @@
 #include <clocale>
 #include <cstdlib>
 #include <ctime>
-#include <iostream>
 #include <fstream>
+#include <iostream>
 #include <string.h>
 
 #include "macr.h"
@@ -16,19 +16,20 @@ char getRandChar(char start, char end)
 
 char* generateRandomWord(void)
 {
-    FILE *file = fopen("words.txt", "r");
+    FILE* file = fopen("words.txt", "r");
     int size = 1;
-    char *buffer = (char*) malloc(SIZE * sizeof(char));
-    char **words = (char**)malloc(sizeof(char*));;
-    while(fgets(buffer, SIZE, file)) {
-        words = (char**) realloc(words, (size) * sizeof(char*));
-        words[size - 1] = (char*) malloc((strlen(buffer))*sizeof(char));
+    char* buffer = (char*)malloc(SIZE * sizeof(char));
+    char** words = (char**)malloc(sizeof(char*));
+    ;
+    while (fgets(buffer, SIZE, file)) {
+        words = (char**)realloc(words, (size) * sizeof(char*));
+        words[size - 1] = (char*)malloc((strlen(buffer)) * sizeof(char));
         strcpy(words[size - 1], buffer);
         size++;
     }
     fclose(file);
     free(buffer);
-    return words[rand() % (size-1)];   
+    return words[rand() % (size - 1)];
 }
 
 void helpMessage(void)
@@ -82,38 +83,6 @@ char genUpLow(void)
     return sym;
 }
 
-char* generateOneParam(char** argv)
-{
-    int passwordLength = atoi(argv[1]);
-    if (passwordLength == 0) {
-        cout << "\nError: wrong password length" << endl;
-        return NULL;
-    }
-    char* password = (char*)malloc(passwordLength * sizeof(char));
-    int p = 0;  
-    if (string(argv[2]) == "-0") {
-        for (int i = 0; i < passwordLength; i++)
-            password[p++] = getRandChar('0', '9');
-    } 
-    else if (string(argv[2]) == "-A") {
-        for (int i = 0; i < passwordLength; i++)
-            password[p++] = getRandChar('A', 'Z');
-    }
-    else if (string(argv[2]) == "-a") {
-        for (int i = 0; i < passwordLength; i++)
-            password[p++] = getRandChar('a', 'z');
-    }
-    else if (string(argv[2]) == "-Aa") {
-        for (int i = 0; i < passwordLength; i++)
-            password[p++] = genUpLow();
-    }
-    else if (string(argv[2]) == "-symbols") {
-        for (int i = 0; i < passwordLength; i++)
-            password[p++] = genSym();
-    }
-    return password;
-}
-
 char** generateDefault(void)
 {
     char** passwords = new char*[ROW];
@@ -128,46 +97,52 @@ char** generateDefault(void)
     return passwords;
 }
 
-char* generateSeveralParam(int count, char** values)
+char** generateSeveralParam(int count, char** values)
 {
-    int passwordLength = atoi(values[1]);
+    const int passwordLength = atoi(values[1]);
     if (passwordLength == 0) {
         cout << "\nError: wrong password length" << endl;
         return NULL;
     }
-    char* password = (char*)malloc(passwordLength * sizeof(char));
-    char** args = (char**)malloc((count - 2) * sizeof(char*));
-    for (int i = 0; i < count - 2; i++) {
-        args[i] = (char*)malloc(strlen(values[i + 2]) * sizeof(char));
-        strcpy(args[i], values[i + 2]);
+    int passwordCount = atoi(values[2]);
+    if (atoi(values[2]) == 0) {
+        cout << "\nError: wrong password count" << endl;
+        return NULL;
     }
-    int p = 0;
-    for (int i = 0; i < count - 2; i++) {
-        if (string(args[i]) == "-0")
-            password[p++] = getRandChar('0', '9');
-        else if (string(args[i]) == "-A")
-            password[p++] = getRandChar('A', 'Z');
-        else if (string(args[i]) == "-a")
-            password[p++] = getRandChar('a', 'z');
-        else if (string(args[i]) == "-Aa")
-            password[p++] = genUpLow();
-        else if (string(args[i]) == "-symbols")
-            password[p++] = genSym();
+    char** passwords = (char**)malloc(passwordCount * sizeof(char*));
+    char** args = (char**)malloc((count - 3) * sizeof(char*));
+    for (int i = 0; i < count - 3; i++) {
+        args[i] = (char*)malloc(strlen(values[i + 3]) * sizeof(char));
+        strcpy(args[i], values[i + 3]);
     }
-
-    for (int i = count - 2; i < passwordLength; i++) {
-        int k = rand() % (count - 2);
-        if (string(args[k]) == "-0")
-            password[p++] = getRandChar('0', '9');
-        else if (string(args[k]) == "-A")
-            password[p++] = getRandChar('A', 'Z');
-        else if (string(args[k]) == "-a")
-            password[p++] = getRandChar('a', 'z');
-        else if (string(args[k]) == "-Aa")
-            password[p++] = genUpLow();
-        else if (string(args[k]) == "-symbols")
-            password[p++] = genSym();
+    for (int g = 0; g < passwordCount; g++) {
+        int p = 0;
+        passwords[g] = (char*)malloc(passwordLength * sizeof(char));
+        for (int i = 0; i < count - 3; i++) {
+            if (string(args[i]) == "-0")
+                passwords[g][p++] = getRandChar('0', '9');
+            else if (string(args[i]) == "-A")
+                passwords[g][p++] = getRandChar('A', 'Z');
+            else if (string(args[i]) == "-a")
+                passwords[g][p++] = getRandChar('a', 'z');
+            else if (string(args[i]) == "-Aa")
+                passwords[g][p++] = genUpLow();
+            else if (string(args[i]) == "-symbols")
+                passwords[g][p++] = genSym();
+        }
+        for (int i = count - 3; i < passwordLength; i++) {
+            int k = rand() % (count - 3);
+            if (string(args[k]) == "-0")
+                passwords[g][p++] = getRandChar('0', '9');
+            else if (string(args[k]) == "-A")
+                passwords[g][p++] = getRandChar('A', 'Z');
+            else if (string(args[k]) == "-a")
+                passwords[g][p++] = getRandChar('a', 'z');
+            else if (string(args[k]) == "-Aa")
+                passwords[g][p++] = genUpLow();
+            else if (string(args[k]) == "-symbols")
+                passwords[g][p++] = genSym();
+        }
     }
-    return password;
+    return passwords;
 }
-
