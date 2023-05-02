@@ -28,7 +28,9 @@ char* generateRandomWord(void)
     }
     fclose(file);
     free(buffer);
-    char* word = words[rand() % (size - 1)];
+    int idx = rand() % (size - 1);
+    char* word = (char*)malloc(strlen(words[idx]) * sizeof(char));
+    strcpy(word, words[idx]);
     for (int i = 0; i < (size - 1); i++)
         free(words[i]);
     free(words);
