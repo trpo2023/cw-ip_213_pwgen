@@ -160,11 +160,14 @@ char** generateSeveralParam(int count, char** values)
                     passwords[g][p++] = genUpLow();
                 else if (string(sortsArgs[k]) == "-symbols")
                     passwords[g][p++] = genSym();
-                else i--;
+                else
+                    i--;
             }
-            char* temp = (char*) malloc(sizeof(char));
+            char* temp = (char*)malloc(sizeof(char));
             generateRandomWord(temp);
-            passwords[g] = (char*) realloc(passwords[g], (passwordLength + strlen(temp)) * sizeof(char));
+            passwords[g] = (char*)realloc(
+                    passwords[g],
+                    (passwordLength + strlen(temp)) * sizeof(char));
             int idx = 0;
             for (int i = passwordLength; idx < (int)strlen(temp); i++) {
                 passwords[g][i] = temp[idx++];
@@ -198,7 +201,6 @@ char** generateSeveralParam(int count, char** values)
                     passwords[g][p++] = genSym();
             }
         }
-
     }
     for (int i = 0; i < count - 3; i++)
         free(args[i]);

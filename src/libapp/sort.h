@@ -1,1 +1,3 @@
-char **countingSort (char**, int, int*);
+#pragma once
+
+char** countingSort(char**, int, int*);
