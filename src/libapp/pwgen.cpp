@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "macr.h"
+#include "sort.h"
 
 using namespace std;
 
@@ -14,9 +15,12 @@ char getRandChar(char start, char end)
     return (char)(start + rand() % (end - start + 1));
 }
 
-char* generateRandomWord(void)
+void generateRandomWord(char* word)
 {
     FILE* file = fopen("words.txt", "r");
+    if (file == NULL) {
+        return;
+    }
     int size = 1;
     char* buffer = (char*)malloc(SIZE * sizeof(char));
     char** words = (char**)malloc(sizeof(char*));
@@ -29,18 +33,17 @@ char* generateRandomWord(void)
     fclose(file);
     free(buffer);
     int idx = rand() % (size - 1);
-    char* word = (char*)malloc(strlen(words[idx]) * sizeof(char));
+    word = (char*)realloc(word, strlen(words[idx]) * sizeof(char));
     strcpy(word, words[idx]);
     for (int i = 0; i < (size - 1); i++)
         free(words[i]);
     free(words);
-    return word;
 }
 
 void helpMessage(void)
 {
     setlocale(LC_ALL, "Russian");
-    cout << "\nЗапуск: make run ARGS=[PW_LEN] [NUM_OF_PW] [OPTION], где:\
+    cout << "\nЗапуск: make run ARGS=\"[PW_LEN] [NUM_OF_PW] [OPTION]\", где:\
         \n[OPTION] – параметры пароля (аргументы командной строки).\
         \n[PW_LEN] – длина генерируемого пароля.\
         \n[NUM_OF_PW] – количество генерируемых паролей\
@@ -120,38 +123,89 @@ char** generateSeveralParam(int count, char** values)
         args[i] = (char*)malloc(strlen(values[i + 3]) * sizeof(char));
         strcpy(args[i], values[i + 3]);
     }
+
+    int newSize = 0;
+    char** sortsArgs = countingSort(args, count - 3, &newSize);
+    bool hasWord = false;
     for (int g = 0; g < passwordCount; g++) {
         int p = 0;
         passwords[g] = (char*)malloc(passwordLength * sizeof(char));
-        for (int i = 0; i < count - 3; i++) {
-            if (string(args[i]) == "-0")
-                passwords[g][p++] = getRandChar('0', '9');
-            else if (string(args[i]) == "-A")
-                passwords[g][p++] = getRandChar('A', 'Z');
-            else if (string(args[i]) == "-a")
-                passwords[g][p++] = getRandChar('a', 'z');
-            else if (string(args[i]) == "-Aa")
-                passwords[g][p++] = genUpLow();
-            else if (string(args[i]) == "-symbols")
-                passwords[g][p++] = genSym();
+        for (int i = 0; i < newSize; i++) {
+            if (string(sortsArgs[i]) == "-word") {
+                hasWord = true;
+            }
         }
-        for (int i = count - 3; i < passwordLength; i++) {
-            int k = rand() % (count - 3);
-            if (string(args[k]) == "-0")
-                passwords[g][p++] = getRandChar('0', '9');
-            else if (string(args[k]) == "-A")
-                passwords[g][p++] = getRandChar('A', 'Z');
-            else if (string(args[k]) == "-a")
-                passwords[g][p++] = getRandChar('a', 'z');
-            else if (string(args[k]) == "-Aa")
-                passwords[g][p++] = genUpLow();
-            else if (string(args[k]) == "-symbols")
-                passwords[g][p++] = genSym();
-        }
-    }
+        if (hasWord) {
+            for (int i = 0; i < newSize - 1; i++) {
+                if (string(sortsArgs[i]) == "-0")
+                    passwords[g][p++] = getRandChar('0', '9');
+                else if (string(sortsArgs[i]) == "-A")
+                    passwords[g][p++] = getRandChar('A', 'Z');
+                else if (string(sortsArgs[i]) == "-a")
+                    passwords[g][p++] = getRandChar('a', 'z');
+                else if (string(sortsArgs[i]) == "-Aa")
+                    passwords[g][p++] = genUpLow();
+                else if (string(sortsArgs[i]) == "-symbols")
+                    passwords[g][p++] = genSym();
+            }
+            for (int i = newSize - 1; i < passwordLength; i++) {
+                int k = rand() % (count - 3);
+                if (string(sortsArgs[k]) == "-0")
+                    passwords[g][p++] = getRandChar('0', '9');
+                else if (string(sortsArgs[k]) == "-A")
+                    passwords[g][p++] = getRandChar('A', 'Z');
+                else if (string(sortsArgs[k]) == "-a")
+                    passwords[g][p++] = getRandChar('a', 'z');
+                else if (string(sortsArgs[k]) == "-Aa")
+                    passwords[g][p++] = genUpLow();
+                else if (string(sortsArgs[k]) == "-symbols")
+                    passwords[g][p++] = genSym();
+                else i--;
+            }
+            char* temp = (char*) malloc(sizeof(char));
+            generateRandomWord(temp);
+            passwords[g] = (char*) realloc(passwords[g], (passwordLength + strlen(temp)) * sizeof(char));
+            int idx = 0;
+            for (int i = passwordLength; idx < (int)strlen(temp); i++) {
+                passwords[g][i] = temp[idx++];
+            }
+            free(temp);
 
+        } else {
+            for (int i = 0; i < newSize; i++) {
+                if (string(sortsArgs[i]) == "-0")
+                    passwords[g][p++] = getRandChar('0', '9');
+                else if (string(sortsArgs[i]) == "-A")
+                    passwords[g][p++] = getRandChar('A', 'Z');
+                else if (string(sortsArgs[i]) == "-a")
+                    passwords[g][p++] = getRandChar('a', 'z');
+                else if (string(sortsArgs[i]) == "-Aa")
+                    passwords[g][p++] = genUpLow();
+                else if (string(sortsArgs[i]) == "-symbols")
+                    passwords[g][p++] = genSym();
+            }
+            for (int i = newSize; i < passwordLength; i++) {
+                int k = rand() % (count - 3);
+                if (string(sortsArgs[k]) == "-0")
+                    passwords[g][p++] = getRandChar('0', '9');
+                else if (string(sortsArgs[k]) == "-A")
+                    passwords[g][p++] = getRandChar('A', 'Z');
+                else if (string(sortsArgs[k]) == "-a")
+                    passwords[g][p++] = getRandChar('a', 'z');
+                else if (string(sortsArgs[k]) == "-Aa")
+                    passwords[g][p++] = genUpLow();
+                else if (string(sortsArgs[k]) == "-symbols")
+                    passwords[g][p++] = genSym();
+            }
+        }
+
+    }
     for (int i = 0; i < count - 3; i++)
         free(args[i]);
     free(args);
+
+    for (int i = 0; i < newSize; i++)
+        free(sortsArgs[i]);
+    free(sortsArgs);
     return passwords;
 }
