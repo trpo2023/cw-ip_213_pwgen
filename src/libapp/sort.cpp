@@ -10,14 +10,14 @@ char** countingSort(char** arr, int oldSize, int* newSize)
     int index = 0;
     char** args = (char**)malloc(sizeof(char*));
     for (int i = 0; i < oldSize; i++) {
-        char flag = 0;
+        bool flag = false;
         for (int j = 0; j < oldSize; j++) {
             if (i == j) {
                 break;
             }
 
             if ((strcmp(arr[i], arr[j])) == 0) {
-                flag = 1;
+                flag = true;
                 break;
             }
         }
