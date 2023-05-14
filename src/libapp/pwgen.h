@@ -6,4 +6,3 @@ char genSym(void);
 char genUpLow(void);
 char** generateDefault(void);
 char** generateSeveralParam(int, char**);
-void generateRandomWord(char*);
