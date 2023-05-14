@@ -1,7 +1,7 @@
 #include <cstdlib>
 #include <string.h>
 
-#include "macr.h"
+#include <libapp/macr.h>
 
 char** countingSort(char** arr, int oldSize, int* newSize)
 {
