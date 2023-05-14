@@ -30,7 +30,6 @@ char** countingSort(char** arr, int oldSize, int* newSize)
             count += 1;
         }
     }
-
     *(newSize) = count;
     return args;
 }
