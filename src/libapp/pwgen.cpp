@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string.h>
 
+#include "list.h"
 #include "macr.h"
 #include "sort.h"
 
@@ -93,7 +94,7 @@ void genPassword(int start, int end, bool flag, char *password, char** args, int
             password[(*p)++] = getRandChar('a', 'z');
         else if (string(args[k]) == "-Aa")
             password[(*p)++] = genUpLow();
-        else if (string(args[k]) == "-symbols")
+        else if (string(args[k]) == "--symbols")
             password[(*p)++] = genSym();
     }
 }
@@ -101,15 +102,7 @@ void genPassword(int start, int end, bool flag, char *password, char** args, int
 char** generateSeveralParam(int count, char** values)
 {
     const int passwordLength = atoi(values[1]);
-    if (passwordLength == 0) {
-        cout << "\nError: wrong password length" << endl;
-        return NULL;
-    }
     int passwordCount = atoi(values[2]);
-    if (atoi(values[2]) == 0) {
-        cout << "\nError: wrong password count" << endl;
-        return NULL;
-    }
     char** passwords = (char**)malloc(passwordCount * sizeof(char*));
     char** args = (char**)malloc((count - 3) * sizeof(char*));
     for (int i = 0; i < count - 3; i++) {
@@ -123,31 +116,6 @@ char** generateSeveralParam(int count, char** values)
         passwords[g] = (char*)malloc(passwordLength * sizeof(char));
         genPassword(0, newSize, false, passwords[g], sortsArgs, newSize, &p);
         genPassword(newSize, passwordLength, true, passwords[g], sortsArgs, newSize, &p);
-        // for (int i = 0; i < newSize; i++) {
-        //     if (string(sortsArgs[i]) == "-0")
-        //         passwords[g][p++] = getRandChar('0', '9');
-        //     else if (string(sortsArgs[i]) == "-A")
-        //         passwords[g][p++] = getRandChar('A', 'Z');
-        //     else if (string(sortsArgs[i]) == "-a")
-        //         passwords[g][p++] = getRandChar('a', 'z');
-        //     else if (string(sortsArgs[i]) == "-Aa")
-        //         passwords[g][p++] = genUpLow();
-        //     else if (string(sortsArgs[i]) == "-symbols")
-        //         passwords[g][p++] = genSym();
-        // }
-        // for (int i = newSize; i < passwordLength; i++) {
-        //     int k = rand() % (newSize);
-        //     if (string(sortsArgs[k]) == "-0")
-        //         passwords[g][p++] = getRandChar('0', '9');
-        //     else if (string(sortsArgs[k]) == "-A")
-        //         passwords[g][p++] = getRandChar('A', 'Z');
-        //     else if (string(sortsArgs[k]) == "-a")
-        //         passwords[g][p++] = getRandChar('a', 'z');
-        //     else if (string(sortsArgs[k]) == "-Aa")
-        //         passwords[g][p++] = genUpLow();
-        //     else if (string(sortsArgs[k]) == "-symbols")
-        //         passwords[g][p++] = genSym();
-        // }
     }
     for (int i = 0; i < count - 3; i++)
         free(args[i]);
@@ -157,4 +125,51 @@ char** generateSeveralParam(int count, char** values)
         free(sortsArgs[i]);
     free(sortsArgs);
     return passwords;
+}
+
+int checkArgs (int argc, char* argv[], int* idx)  
+{
+    const char* args[] = {"-a", "-A", "-Aa", "-0", "--symbols"};
+    int size = sizeof(args)/sizeof(args[0]);
+    if (argc == 1) {
+        char** passwords = generateDefault();
+        listDefPassword(passwords);
+        for (int i = 0; i < ROW; i++) {
+            free(passwords[i]);
+        }
+        free(passwords);
+        return 0;
+    }
+
+    if ((argc == 2)) {
+        if ((string(argv[1]) == "--help")) {
+            helpMessage();
+            return 0;
+        } else {
+            return 5;
+        }
+    }
+    
+    if (argc == 3) {
+        return 1;
+    }
+
+    if (atoi(argv[1]) == 0)
+        return 2;
+    if (atoi(argv[2]) == 0)
+        return 3;  
+
+    for (int i = 3; i < argc; i++) {
+        bool flag = false;
+        for (int j = 0; j < size; j++) {
+            if (strcmp(argv[i], args[j]) == 0){
+                flag = true;        
+            }
+        }
+        if (!flag) {
+            *idx = i;
+            return 4;
+        }
+    }
+    return 0;
 }
