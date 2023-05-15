@@ -81,10 +81,18 @@ char** generateDefault(void)
     return passwords;
 }
 
-void genPassword(int start, int end, bool flag, char *password, char** args, int size, int* p) {
+void genPassword(
+        int start,
+        int end,
+        bool flag,
+        char* password,
+        char** args,
+        int size,
+        int* p)
+{
     for (int i = start; i < end; i++) {
         int k = i;
-        if(flag) 
+        if (flag)
             k = rand() % (size);
         if (string(args[k]) == "-0")
             password[(*p)++] = getRandChar('0', '9');
@@ -115,7 +123,14 @@ char** generateSeveralParam(int count, char** values)
         int p = 0;
         passwords[g] = (char*)malloc(passwordLength * sizeof(char));
         genPassword(0, newSize, false, passwords[g], sortsArgs, newSize, &p);
-        genPassword(newSize, passwordLength, true, passwords[g], sortsArgs, newSize, &p);
+        genPassword(
+                newSize,
+                passwordLength,
+                true,
+                passwords[g],
+                sortsArgs,
+                newSize,
+                &p);
     }
     for (int i = 0; i < count - 3; i++)
         free(args[i]);
@@ -127,10 +142,10 @@ char** generateSeveralParam(int count, char** values)
     return passwords;
 }
 
-int checkArgs (int argc, char* argv[], int* idx)  
+int checkArgs(int argc, char* argv[], int* idx)
 {
     const char* args[] = {"-a", "-A", "-Aa", "-0", "--symbols"};
-    int size = sizeof(args)/sizeof(args[0]);
+    int size = sizeof(args) / sizeof(args[0]);
     if (argc == 1) {
         char** passwords = generateDefault();
         listDefPassword(passwords);
@@ -149,7 +164,7 @@ int checkArgs (int argc, char* argv[], int* idx)
             return 5;
         }
     }
-    
+
     if (argc == 3) {
         return 1;
     }
@@ -157,13 +172,13 @@ int checkArgs (int argc, char* argv[], int* idx)
     if (atoi(argv[1]) == 0)
         return 2;
     if (atoi(argv[2]) == 0)
-        return 3;  
+        return 3;
 
     for (int i = 3; i < argc; i++) {
         bool flag = false;
         for (int j = 0; j < size; j++) {
-            if (strcmp(argv[i], args[j]) == 0){
-                flag = true;        
+            if (strcmp(argv[i], args[j]) == 0) {
+                flag = true;
             }
         }
         if (!flag) {

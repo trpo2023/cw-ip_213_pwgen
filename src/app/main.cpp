@@ -19,19 +19,20 @@ int main(int argc, char* argv[])
             cout << "Error: Few arguments" << endl;
             return 1;
         }
-        
+
         if (check == 2) {
             cout << "Error: wrong password length" << endl;
             return 2;
         }
-        
+
         if (check == 3) {
             cout << "Error: wrong password count" << endl;
             return 3;
         }
-        
+
         if (check == 4) {
-            cout << "Error: unexpected argument \"" << argv[idx] << "\"" << endl;
+            cout << "Error: unexpected argument \"" << argv[idx] << "\""
+                 << endl;
             return 4;
         }
 
