@@ -6,4 +6,4 @@ char genSym(void);
 char genUpLow(void);
 char** generateDefault(void);
 char** generateSeveralParam(int, char**);
-int checkArgs (int, char*[], int*);
+int checkArgs(int, char*[], int*);
