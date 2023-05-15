@@ -12,23 +12,36 @@ using namespace std;
 int main(int argc, char* argv[])
 {
     srand(time(NULL));
-    if (argc == 1) {
-        char** passwords = generateDefault();
-        listDefPassword(passwords);
-    } else if (argc == 2) {
-        if (string(argv[1]) == "-help") {
-            helpMessage();
+    int idx = 0;
+    int check = checkArgs(argc, argv, &idx);
+    if (check) {
+        if (check == 1) {
+            cout << "Error: Few arguments" << endl;
+            return 1;
         }
-        //else if (string(argv[1]) == "-word") {
-        //    cout << generateRandomWord();
-        else {
-            cout << "Error: unexpected argument\n";
+        
+        if (check == 2) {
+            cout << "Error: wrong password length" << endl;
             return 2;
         }
-    } else if (argc == 3) {
-        cout << "Error: few arguments\n";
-        return 2;
-    } else if (argc >= 4) {
+        
+        if (check == 3) {
+            cout << "Error: wrong password count" << endl;
+            return 3;
+        }
+        
+        if (check == 4) {
+            cout << "Error: unexpected argument \"" << argv[idx] << "\"" << endl;
+            return 4;
+        }
+
+        if (check == 5) {
+            cout << "Error: expected \"--help\" " << endl;
+            return 5;
+        }
+    }
+
+    if (argc >= 4) {
         listPassword(generateSeveralParam(argc, argv), atoi(argv[2]));
     }
     return 0;
