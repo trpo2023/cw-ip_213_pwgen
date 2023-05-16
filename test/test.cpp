@@ -7,7 +7,7 @@
 
 #define N 28
 
-CTEST(check_generation, check_numbers)
+CTEST(check_generation, number)
 {
     srand(time(NULL));
     char real = getRandChar('0', '9');
@@ -16,7 +16,7 @@ CTEST(check_generation, check_numbers)
     ASSERT_INTERVAL(left, right, real);
 }
 
-CTEST(check_generation, check_symbol)
+CTEST(check_generation, symbol)
 {
     char* string = new char[N];
     int k = 0;
@@ -43,7 +43,7 @@ CTEST(check_generation, check_symbol)
     ASSERT_EQUAL(expected, real);
 }
 
-CTEST(check_generation, check_upper_case)
+CTEST(check_generation, upper_case)
 {
     srand(time(NULL));
     char real = getRandChar('A', 'Z');
@@ -52,7 +52,7 @@ CTEST(check_generation, check_upper_case)
     ASSERT_INTERVAL(left, right, real);
 }
 
-CTEST(check_generation, check_lower_case)
+CTEST(check_generation, lower_case)
 {
     srand(time(NULL));
     char real = getRandChar('a', 'z');
@@ -61,7 +61,7 @@ CTEST(check_generation, check_lower_case)
     ASSERT_INTERVAL(left, right, real);
 }
 
-CTEST(check_generation, check_up_and_low)
+CTEST(check_generation, up_and_low_case)
 {
     char* string = new char[N];
     int k = 0;
