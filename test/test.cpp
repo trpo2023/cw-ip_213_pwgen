@@ -7,6 +7,7 @@
 #include <libapp/pwgen.h>
 #include <libapp/list.h>
 #include <libapp/macr.h>
+#include <libapp/sort.h>
 
 CTEST(check_generation, number)
 {
@@ -92,7 +93,42 @@ CTEST(check_generation, up_and_low_case)
     ASSERT_EQUAL(expected, real);
 }
 
-CTEST(check_password, default_gen) {
+CTEST (check_arguments, check_sort) 
+{
+    int expected = 0, real = 0, idx = 0, size = 0;
+    const char* arr[] = {"-a", "-A", "-A", "-0", "--symbols", "-a"};
+    const char* sortArr[] = {"-a", "-A", "-0", "--symbols"};
+    int lenArgs = sizeof(arr) / sizeof(arr[0]);
+    int lenSortArgs = sizeof(sortArr) / sizeof(sortArr[0]);
+    char** args = (char**)malloc(sizeof(char*));
+    for (int i = 0; i < lenArgs; i++) {
+        args = (char**)realloc(args, (++size) * sizeof(char*));
+        args[idx] = (char*)malloc(strlen(arr[i]) * sizeof(char));
+        strcpy(args[idx], arr[i]);
+        idx += 1;
+    }
+    int newSize = 0;
+    int check[lenSortArgs];
+    char** sortArgs = countingSort(args, lenArgs, &newSize);
+    for (int i = 0; i < newSize; i++) {
+        if (strcmp(sortArr[i], sortArgs[i]) == 0) {
+            check[i] = 0;
+        }
+    }
+    for (int i = 0; i < lenSortArgs; i++) {
+        if (check[i] != 0) {
+            real = 1;
+        }
+    }
+    ASSERT_EQUAL(expected, real);
+    for (int i = 0; i < lenArgs; i++) {
+        free(args[i]);
+    }
+    free(args);
+}
+
+CTEST(check_password, default_gen) 
+{
     int real = 0;
     int expected = 0;
     srand(time(NULL));
