@@ -5,10 +5,9 @@
 #include <iostream>
 
 #include <libapp/pwgen.h>
+#include <libapp/list.h>
 #include <libapp/macr.h>
 #include <libapp/sort.h>
-
-#define N 28
 
 CTEST(check_generation, number)
 {
@@ -21,7 +20,7 @@ CTEST(check_generation, number)
 
 CTEST(check_generation, symbol)
 {
-    char* string = new char[N];
+    char* string = new char[SYM];
     int k = 0;
     for (char j = '!'; j <= '/'; j++) {
         string[k++] = j;
@@ -35,7 +34,7 @@ CTEST(check_generation, symbol)
     int real = 0;
     srand(time(NULL));
     int x = genSym();
-    for (int i = 0; i < N; i++) {
+    for (int i = 0; i < SYM; i++) {
         if (x == string[i]) {
             real = 1;
             break;
@@ -66,7 +65,7 @@ CTEST(check_generation, lower_case)
 
 CTEST(check_generation, up_and_low_case)
 {
-    char* string = new char[N];
+    char* string = new char[SYM];
     int k = 0;
     for (char j = 'A'; j <= 'Z'; j++) {
         string[k++] = j;
@@ -77,7 +76,7 @@ CTEST(check_generation, up_and_low_case)
     int real = 0;
     srand(time(NULL));
     int x = genUpLow();
-    for (int i = 0; i < N; i++) {
+    for (int i = 0; i < SYM; i++) {
         if ((x < 'A') || (x > 'Z')) {
             if(x < 'A') {
                 real = 1;
@@ -172,20 +171,130 @@ CTEST(check_password, lower_case) {
 
 CTEST(check_password, upper_case)
 {
+    char** arg = (char**)malloc(4 * sizeof(char*));
+    for (int i = 0; i < 4; i++) {
+        arg[i] = (char*)malloc(2 * sizeof(char));
+    }
+    int expected = 0;
+    int real = 0;
+    strcpy(arg[1], "10");
+    strcpy(arg[2], "1");
+    strcpy(arg[3], "-A");
+    srand(time(NULL));
+    char** passwords = generateSeveralParam(4, arg);
+    for (int i = 0; i < atoi(arg[2]); i++)
+        for (int j = 0; j < atoi(arg[1]); j++) {
+            if ((passwords[i][j] < 'A') || (passwords[i][j] > 'Z')) {
+                real = 1;
+                break;
+            }
+        }
+    for (int i = 0; i < 4; i++) {
+        free(arg[i]);
+        if (i < 1)
+            free(passwords[i]);
+    }
+    free(arg);
+    free(passwords);
+    ASSERT_EQUAL(expected, real);
+}
+
+CTEST(check_password, symbols)
+{
+    int expected = 0;
+    int real = 0;
+    char** args = new char*[4];
+    for (int i = 0; i < 4; i++) {
+        args[i] = new char[25];
+    }
+    strcpy(args[0], "test");
+    strcpy(args[1], "10");
+    strcpy(args[2], "1");
+    strcpy(args[3], "--symbols");
+    srand(time(NULL));
+    char** password = generateSeveralParam(4, args);
+    for (int i = 0; i < atoi(args[2]); i++) {
+        for (int j = 0; j < atoi(args[1]); j++) {
+            if (password[i][j] < '!') {
+                real = 1;
+                break;
+            }
+            else if ((password[i][j] > '/') && (password[i][j] < ':')) {
+                real = 1;
+                break;
+            }
+            else if ((password[i][j] > '@') && (password[i][j] < '[')) {
+                real = 1;
+                break;
+            }
+            else if (password[i][j] > '`') {
+                real = 1;
+                break;
+            }
+        }
+    }
+    delete[] args;
+    for (int i = 0; i < 1; i++) {
+        delete[] password[i];
+    }
+    delete[] password;
+    ASSERT_EQUAL(expected, real);
+}
+
+CTEST(check_password, numbers)
+{
+    int expected = 0;
+    int real = 0;
     char** args = (char**)malloc(4 * sizeof(char*));
     for (int i = 0; i < 4; i++) {
         args[i] = (char*)malloc(2 * sizeof(char));
     }
-    int expected = 0;
-    int real = 0;
     strcpy(args[1], "10");
     strcpy(args[2], "1");
-    strcpy(args[3], "-A");
+    strcpy(args[3], "-0");
     srand(time(NULL));
     char** passwords = generateSeveralParam(4, args);
     for (int i = 0; i < atoi(args[2]); i++)
         for (int j = 0; j < atoi(args[1]); j++) {
-            if ((passwords[i][j] < 'A') || (passwords[i][j] > 'Z')) {
+            if ((passwords[i][j] < '0') || (passwords[i][j] > '9')) {
+                real = 1;
+                break;
+            }
+        }
+    for (int i = 0; i < 4; i++) {
+        free(args[i]);
+        if (i < 1)
+            free(passwords[i]);
+    }
+    free(args);
+    free(passwords);
+    ASSERT_EQUAL(expected, real);
+}
+
+CTEST(check_password, up_and_low_case)
+{
+    int expected = 0;
+    int real = 0;
+    char** args = (char**)malloc(4 * sizeof(char*));
+    for (int i = 0; i < 4; i++) {
+        args[i] = (char*)malloc(2 * sizeof(char));
+    }
+    strcpy(args[1], "10");
+    strcpy(args[2], "1");
+    strcpy(args[3], "-Aa");
+    srand(time(NULL));
+    char** passwords = generateSeveralParam(4, args);
+    for (int i = 0; i < atoi(args[2]); i++)
+        for (int j = 0; j < atoi(args[1]); j++) {
+            if (passwords[i][j] < 'A') {
+                real = 1;
+                break;
+            }
+            else if((passwords[i][j] > 'Z') && (passwords[i][j] < 'a')) {
+                real = 1;
+                break;
+            }
+            else if(passwords[i][j] > 'z') {
                 real = 1;
                 break;
             }
