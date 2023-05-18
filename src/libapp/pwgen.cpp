@@ -5,9 +5,9 @@
 #include <iostream>
 #include <string.h>
 
-#include "list.h"
-#include "macr.h"
-#include "sort.h"
+#include <libapp/list.h>
+#include <libapp/macr.h>
+#include <libapp/sort.h>
 
 using namespace std;
 
