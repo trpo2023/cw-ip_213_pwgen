@@ -1,9 +1,8 @@
-#include <clocale>
+#include <iostream>
 #include <cstdlib>
 #include <ctime>
-#include <fstream>
-#include <iostream>
-#include <string.h>
+#include <clocale>
+#include <cstring>
 
 #include <libapp/list.h>
 #include <libapp/macr.h>
