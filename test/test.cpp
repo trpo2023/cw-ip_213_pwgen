@@ -1,12 +1,12 @@
 #include <cstdlib>
-#include <ctest.h>
 #include <cstring>
+#include <ctest.h>
 #include <ctime>
 #include <iostream>
 
-#include <libapp/pwgen.h>
 #include <libapp/list.h>
 #include <libapp/macr.h>
+#include <libapp/pwgen.h>
 #include <libapp/sort.h>
 
 CTEST(check_generation, number)
@@ -78,11 +78,10 @@ CTEST(check_generation, up_and_low_case)
     int x = genUpLow();
     for (int i = 0; i < SYM; i++) {
         if ((x < 'A') || (x > 'Z')) {
-            if(x < 'A') {
+            if (x < 'A') {
                 real = 1;
                 break;
-            }
-            else if((x > 'Z') && ((x < 'a') || (x > 'z'))) {
+            } else if ((x > 'Z') && ((x < 'a') || (x > 'z'))) {
                 real = 1;
                 break;
             }
@@ -93,7 +92,7 @@ CTEST(check_generation, up_and_low_case)
     ASSERT_EQUAL(expected, real);
 }
 
-CTEST (check_arguments, sort) 
+CTEST(check_arguments, sort)
 {
     int expected = 0, real = 0, idx = 0, size = 0;
     const char* arr[] = {"-a", "-A", "-A", "-0", "--symbols", "-a"};
@@ -114,7 +113,7 @@ CTEST (check_arguments, sort)
             break;
         }
     }
-   
+
     for (int i = 0; i < lenArgs; i++) {
         free(args[i]);
     }
@@ -122,28 +121,29 @@ CTEST (check_arguments, sort)
     ASSERT_EQUAL(expected, real);
 }
 
-CTEST(check_password, default_gen) 
+CTEST(check_password, default_gen)
 {
     int real = 0;
     int expected = 0;
     srand(time(NULL));
     char** passwords = generateDefault();
-    for(int i = 0; i < ROW; i++)
-        for(int j = 0; j < COL; j++)
+    for (int i = 0; i < ROW; i++)
+        for (int j = 0; j < COL; j++)
             if ((passwords[i][j] < '!') || (passwords[i][j] > 'z')) {
                 real = 1;
                 break;
             }
-    for(int i = 0; i < ROW; i++)
+    for (int i = 0; i < ROW; i++)
         free(passwords[i]);
     free(passwords);
     ASSERT_EQUAL(expected, real);
 }
 
-CTEST(check_password, lower_case) {
-    char **args = (char**)malloc(4*sizeof(char*));
-    for(int i = 0; i < 4; i++) {
-        args[i] = (char*)malloc(2*sizeof(char));
+CTEST(check_password, lower_case)
+{
+    char** args = (char**)malloc(4 * sizeof(char*));
+    for (int i = 0; i < 4; i++) {
+        args[i] = (char*)malloc(2 * sizeof(char));
     }
     int expected = 0;
     int real = 0;
@@ -154,14 +154,14 @@ CTEST(check_password, lower_case) {
     char** passwords = generateSeveralParam(4, args);
     for (int i = 0; i < atoi(args[2]); i++)
         for (int j = 0; j < atoi(args[1]); j++) {
-            if((passwords[i][j] < 'a') || (passwords[i][j] > 'z')) {
+            if ((passwords[i][j] < 'a') || (passwords[i][j] > 'z')) {
                 real = 1;
                 break;
             }
         }
     for (int i = 0; i < 4; i++) {
         free(args[i]);
-        if(i < 1)
+        if (i < 1)
             free(passwords[i]);
     }
     free(args);
@@ -218,16 +218,13 @@ CTEST(check_password, symbols)
             if (password[i][j] < '!') {
                 real = 1;
                 break;
-            }
-            else if ((password[i][j] > '/') && (password[i][j] < ':')) {
+            } else if ((password[i][j] > '/') && (password[i][j] < ':')) {
                 real = 1;
                 break;
-            }
-            else if ((password[i][j] > '@') && (password[i][j] < '[')) {
+            } else if ((password[i][j] > '@') && (password[i][j] < '[')) {
                 real = 1;
                 break;
-            }
-            else if (password[i][j] > '`') {
+            } else if (password[i][j] > '`') {
                 real = 1;
                 break;
             }
@@ -289,12 +286,10 @@ CTEST(check_password, up_and_low_case)
             if (passwords[i][j] < 'A') {
                 real = 1;
                 break;
-            }
-            else if((passwords[i][j] > 'Z') && (passwords[i][j] < 'a')) {
+            } else if ((passwords[i][j] > 'Z') && (passwords[i][j] < 'a')) {
                 real = 1;
                 break;
-            }
-            else if(passwords[i][j] > 'z') {
+            } else if (passwords[i][j] > 'z') {
                 real = 1;
                 break;
             }
@@ -306,5 +301,116 @@ CTEST(check_password, up_and_low_case)
     }
     free(args);
     free(passwords);
+    ASSERT_EQUAL(expected, real);
+}
+
+CTEST(check_args, correct)
+{
+    int expected = 0, idx = 0, size = 4;
+    char** arr = new char*[size];
+    for (int i = 0; i < size; i++) {
+        arr[i] = new char[size];
+    }
+    strcpy(arr[0], "app");
+    strcpy(arr[1], "4");
+    strcpy(arr[2], "6");
+    strcpy(arr[3], "-a");
+    int real = checkArgs(size, arr, &idx);
+    for (int i = 0; i < size; i++) {
+        delete[] arr[i];
+    }
+    delete[] arr;
+    ASSERT_EQUAL(expected, real);
+}
+
+CTEST(check_args, one_param_uncor)
+{
+    int expected = 5, idx = 0, size = 2;
+    char** arr = new char*[size];
+    for (int i = 0; i < size; i++) {
+        arr[i] = new char[4];
+    }
+    strcpy(arr[0], "app");
+    strcpy(arr[1], "-help");
+    int real = checkArgs(size, arr, &idx);
+    for (int i = 0; i < size; i++) {
+        delete[] arr[i];
+    }
+    delete[] arr;
+    ASSERT_EQUAL(expected, real);
+}
+
+CTEST(check_args, two_param)
+{
+    int expected = 1, idx = 0, size = 3;
+    char** arr = new char*[size];
+    for (int i = 0; i < size; i++) {
+        arr[i] = new char[4];
+    }
+    strcpy(arr[0], "app");
+    strcpy(arr[1], "4");
+    strcpy(arr[2], "6");
+    int real = checkArgs(size, arr, &idx);
+    for (int i = 0; i < size; i++) {
+        delete[] arr[i];
+    }
+    delete[] arr;
+    ASSERT_EQUAL(expected, real);
+}
+
+CTEST(check_args, three_param_len)
+{
+    int expected = 2, idx = 0, size = 4;
+    char** arr = new char*[size];
+    for (int i = 0; i < size; i++) {
+        arr[i] = new char[size];
+    }
+    strcpy(arr[0], "app");
+    strcpy(arr[1], "0");
+    strcpy(arr[2], "6");
+    strcpy(arr[3], "-a");
+    int real = checkArgs(size, arr, &idx);
+    for (int i = 0; i < size; i++) {
+        delete[] arr[i];
+    }
+    delete[] arr;
+    ASSERT_EQUAL(expected, real);
+}
+
+CTEST(check_args, three_param_count)
+{
+    int expected = 3, idx = 0, size = 4;
+    char** arr = new char*[size];
+    for (int i = 0; i < size; i++) {
+        arr[i] = new char[size];
+    }
+    strcpy(arr[0], "app");
+    strcpy(arr[1], "2");
+    strcpy(arr[2], "0");
+    strcpy(arr[3], "-a");
+    int real = checkArgs(size, arr, &idx);
+    for (int i = 0; i < size; i++) {
+        delete[] arr[i];
+    }
+    delete[] arr;
+    ASSERT_EQUAL(expected, real);
+}
+
+CTEST(check_args, four_param_uncor)
+{
+    int expected = 4, idx = 0, size = 4;
+    char** arr = new char*[size];
+    for (int i = 0; i < size; i++) {
+        arr[i] = new char[size];
+    }
+    strcpy(arr[0], "app");
+    strcpy(arr[1], "4");
+    strcpy(arr[2], "6");
+    strcpy(arr[3], "-Tok");
+    int real = checkArgs(size, arr, &idx);
+    for (int i = 0; i < size; i++) {
+        delete[] arr[i];
+    }
+    delete[] arr;
     ASSERT_EQUAL(expected, real);
 }
