@@ -1,12 +1,12 @@
-#include <iostream>
-#include <cstdlib>
-#include <ctime>
 #include <clocale>
+#include <cstdlib>
 #include <cstring>
+#include <ctime>
+#include <iostream>
 
-#include <libapp/list.h>
-#include <libapp/macr.h>
-#include <libapp/sort.h>
+#include "libapp/list.h"
+#include "libapp/macr.h"
+#include "libapp/sort.h"
 
 using namespace std;
 
