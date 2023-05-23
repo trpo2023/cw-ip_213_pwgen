@@ -6,8 +6,8 @@
 #include <ctest.h>
 #include "libapp/list.h"
 #include "libapp/macr.h"
-#include <libapp/pwgen.h>
-#include <libapp/sort.h>
+#include "libapp/pwgen.h"
+#include "libapp/sort.h"
 
 CTEST(check_generation, number)
 {
