@@ -1,10 +1,9 @@
-#include <iostream>
 #include <cstdlib>
 #include <cstring>
 #include <ctime>
+#include <iostream>
 
 #include <ctest.h>
-
 #include <libapp/list.h>
 #include <libapp/macr.h>
 #include <libapp/pwgen.h>
